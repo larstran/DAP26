@@ -1,0 +1,69 @@
+# ==============================================================================
+# GITIGNORE: DỰ ÁN ĐỊNH GIÁ BĐS CHO THUÊ SINH VIÊN (MAIN_HA)
+# ==============================================================================
+
+# 1. Biến môi trường và Khóa API bí mật (Secrets & Credentials)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+config.json
+**/config.json
+!config.example.json
+!**/config.example.json
+*.pem
+*.key
+*.p12
+*.id_rsa
+secrets.json
+credentials.json
+
+# 2. Bytecode & Cache của Python
+__pycache__/
+**/*__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 3. Môi trường ảo Python (Virtual Environments)
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# 4. Tệp Checkpoints, Tiến trình tạm & Logs
+*_checkpoint.json
+**/checkpoint.json
+**/*_checkpoint.json
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# 5. Dữ liệu thô và trung gian (Chứa SĐT người đăng, PII & dữ liệu kích thước lớn)
+data/01_raw/*.csv
+data/02_intermediate/*.csv
+data/02_intermediate/*.json
+data/02_intermediate/*_checkpoint.json
+# Giữ lại tập dữ liệu vàng đã chuẩn hóa sạch phục vụ huấn luyện mô hình ML:
+!data/03_processed/gold_student_rental_train.csv
+!data/03_processed/gold_student_rental_train.json
+# Giữ cấu trúc thư mục rỗng
+!**/.gitkeep
+
+# 6. Cấu hình Editor, IDE & Hệ điều hành
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+desktop.ini

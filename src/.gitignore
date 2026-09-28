@@ -1,0 +1,54 @@
+# ==============================================================================
+# GITIGNORE: BẢO VỆ DỮ LIỆU NHẠY CẢM VÀ TỆP TIN TẠM CHO THƯ MỤC SRC
+# ==============================================================================
+
+# 1. Tệp chứa biến môi trường & khóa API bí mật (Secrets & Credentials)
+.env
+.env.*
+!.env.example
+config.json
+*.pem
+*.key
+*.p12
+*.id_rsa
+secrets.json
+credentials.json
+
+# 2. Bytecode & Cache thực thi Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 3. Môi trường ảo Python (Virtual Environments)
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# 4. Checkpoints, File trung gian tạm thời & Logs
+*_checkpoint.json
+checkpoint.json
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# 5. Dữ liệu thô/kết quả tạm thời nếu phát sinh trong src
+*.csv
+*.tsv
+
+# 6. Cấu hình Editor & Hệ điều hành
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
