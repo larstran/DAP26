@@ -1,0 +1,3 @@
+﻿input_row,model,prediction,lower_90,upper_90,id,property_type,quan_huyen,dien_tich_m2,gia_rao,chenh_lech,so_voi_du_bao,unit
+0,lightgbm_existing,3.108678480004805,1.6422882376461034,5.388871059386516,vi_du_minh_hoa,phong_tro_ktx,Gò Vấp,25,2.7,-0.4086784800048049,Dưới dự báo,triệu VNĐ/tháng
+0,extratrees_new,3.67213624672657,1.76041394552538,6.907820181592956,vi_du_minh_hoa,phong_tro_ktx,Gò Vấp,25,2.7,-0.9721362467265697,Dưới dự báo,triệu VNĐ/tháng

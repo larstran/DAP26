@@ -1,0 +1,13 @@
+{
+  "id": "vi_du_minh_hoa",
+  "dien_tich_m2": 25,
+  "property_type": "phong_tro_ktx",
+  "quan_huyen": "Gò Vấp",
+  "title_raw": "Phòng trọ gác lửng có máy lạnh",
+  "so_phong_ngu": 1,
+  "so_toilet": 1,
+  "has_gac_lung": 1,
+  "has_may_lanh": 1,
+  "is_full_furniture": 0,
+  "gia_thue_trieu_thang": 2.7
+}
