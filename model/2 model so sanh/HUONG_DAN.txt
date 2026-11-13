@@ -1,0 +1,64 @@
+HAI MODEL DỰ ĐOÁN GIÁ THUÊ
+==========================
+Đơn vị đầu ra: triệu VNĐ/tháng. Không có model giá bán trong gói này.
+
+1. MODEL
+- models/lightgbm_existing.joblib: bản sao nguyên trạng từ outputs_dual/rental/model.joblib; LightGBM dùng bảng thuộc tính + TF-IDF tiêu đề đã làm sạch giá.
+- models/extratrees_new.joblib: ExtraTrees mới, 400 cây, min_samples_leaf=4, log1p target; chỉ dùng thuộc tính cấu trúc, không dùng tiêu đề làm biến dự đoán.
+- train_avm.py: mã nguồn tương thích model cũ và tiền xử lý dùng chung, giữ nguyên từ dự án gốc. Không chạy trực tiếp file này; dùng train_new.py để huấn luyện lại model mới.
+
+2. CHẠY
+Mở terminal trong thư mục này. Môi trường đã kiểm tra: Python 3.13.
+Cài thư viện nếu cần:
+  python -m pip install -r requirements.txt
+Dự đoán bằng cả hai model:
+  python predict.py --model both --input example.json
+Chỉ model cũ:
+  python predict.py --model existing --input example.json
+Chỉ model mới:
+  python predict.py --model new --input example.json
+Đầu vào cũng có thể là danh sách JSON hoặc CSV cùng các cột như example.json.
+Xuất kết quả:
+  python predict.py --model both --input example.json --output predictions.csv
+Huấn luyện lại model mới và đánh giá cả hai (không ghi đè model cũ):
+  python -u train_new.py
+
+3. ĐẦU VÀO
+Dùng đủ các trường trong example.json. title_raw có thể để chuỗi rỗng.
+property_type: phong_tro_ktx, can_ho, nha_nguyen_can.
+quan_huyen theo nhãn trong dữ liệu, ví dụ Gò Vấp, Bình Thạnh, TP. Thủ Đức.
+Diện tích tính bằng m², phải hữu hạn và > 0; tiện ích mã hóa 0/1.
+Không cần nhập giá thuê, đơn giá/m², ID hoặc URL.
+Cả hai model giữ quy tắc tiền xử lý cũ: clip số phòng/WC về 0–10 và máy lạnh về 0–1; đây không phải sửa lỗi trích xuất tại nguồn.
+
+4. KẾT QUẢ THỰC ĐO
+14.185 tin sau khử trùng; fit 9.975, calibration 1.595, test 2.615.
+Giữ nguyên các nhóm và phân hoạch của model cũ; đã kiểm tra không trùng nhóm.
+Chọn ExtraTrees bằng 5-fold GroupKFold trên fit, so sánh min_samples_leaf=1,2,4; không chọn bằng test.
+                    LightGBM cũ     ExtraTrees mới
+CV MAE              3,03594         3,71803
+Test MAE            2,83481         3,50808
+Test RMSE           4,50348         5,39641
+Test R²             0,75172         0,64350
+Test MAPE           23,23%          29,57%
+Sai số <=20%        59,46%          51,13%
+
+LightGBM cũ chính xác hơn trên tập kiểm tra này. Model mới là mô hình đối chiếu dùng dữ liệu cấu trúc, không phải cải thiện đã được chứng minh.
+Chi tiết: evaluation/comparison.csv, segments.csv, new_cv.csv, report.json và dự đoán từng tin.
+
+5. NGUỒN VÀ GIỚI HẠN
+GitHub nguồn: https://github.com/larstran/DAP26
+Đã đọc README và src/standardize_data.py; dữ liệu huấn luyện trong gói là CSV local từ dự án gốc, không thay bằng bảng nhỏ hơn trên GitHub.
+Khoảng lower_90/upper_90 dùng split conformal, maximum log residual mỗi nhóm calibration. Độ phủ thực tế từng tin: LightGBM 89,79%, ExtraTrees 89,02%; độ phủ toàn nhóm: 87,90% và 88,00%.
+Khoảng dự đoán khá rộng, không bảo đảm 90% cho từng bất động sản.
+Holdout đã được xem trong các lần làm trước; không coi là benchmark độc lập hoàn toàn mới.
+Đây là giá rao lịch sử, không phải giá giao dịch hoặc định giá thị trường hiện tại.
+Dữ liệu còn quận không rõ, lỗi số phòng và khả năng lẫn giá/người với giá/căn. Không sửa nhãn theo suy đoán.
+Chỉ mở joblib từ nguồn đáng tin cậy. Giữ các file Python và requirements đi cùng models khi sao chép.
+
+6. KIỂM CHỨNG
+- Nạp lại hai model và đánh giá đủ 2.615 tin test.
+- MAE model cũ khớp metadata gốc.
+- CLI dự đoán cả hai model thành công.
+- Sao chép toàn gói sang thư mục tạm, chạy từ working directory khác: thành công.
+- Model cũ khớp SHA256 bản gốc, đúng hai file model trong models/.
